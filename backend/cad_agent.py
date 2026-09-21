@@ -12,7 +12,12 @@ load_dotenv()
 
 class CadAgent:
     def __init__(self, on_thought=None, on_status=None):
-        self.client = genai.Client(http_options={"api_version": "v1beta"}, api_key=os.getenv("GEMINI_API_KEY"))
+        api_key = os.getenv("GEMINI_API_KEY")
+        self.client = (
+            genai.Client(http_options={"api_version": "v1beta"}, api_key=api_key)
+            if api_key
+            else None
+        )
         # Using Gemini 2.5 Pro for thinking/streaming support
         self.model = "gemini-3-pro-preview"
         self.on_thought = on_thought  # Callback for streaming thoughts 
@@ -68,6 +73,8 @@ export_stl(result_part, 'output.stl')
             output_dir: Directory to save the script and STL. If None, uses temp dir.
         """
         print(f"[CadAgent DEBUG] [START] Generation started for: '{prompt}'")
+        if self.client is None:
+            return {"success": False, "error": "Gemini is not configured. Add GEMINI_API_KEY to .env and restart ADA."}
         
         try:
             # Use provided output_dir or fall back to temp
@@ -441,4 +448,3 @@ Ensure you still export to 'output.stl'.
             import traceback
             traceback.print_exc()
             return None
-

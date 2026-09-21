@@ -11,9 +11,6 @@ from google.genai import types
 load_dotenv()
 API_KEY = os.getenv("GEMINI_API_KEY")
 
-if not API_KEY:
-    raise ValueError("Please set GEMINI_API_KEY in your .env file")
-
 # 2. Configuration
 SCREEN_WIDTH = 1440
 SCREEN_HEIGHT = 900
@@ -22,7 +19,10 @@ MODEL_ID = "gemini-2.5-computer-use-preview-10-2025"
 
 class WebAgent:
     def __init__(self):
-        self.client = genai.Client(api_key=API_KEY)
+        # Keep the application importable before a key is configured. This lets
+        # the desktop UI, settings, and non-AI tools start normally; requests
+        # that actually use Gemini are rejected with a clear message below.
+        self.client = genai.Client(api_key=API_KEY) if API_KEY else None
         self.browser = None
         self.context = None
         self.page = None
@@ -189,6 +189,12 @@ class WebAgent:
         update_callback: async function(screenshot_b64: str, logs: str)
         Returns the final response from the agent.
         """
+        if self.client is None:
+            message = "Gemini is not configured. Add GEMINI_API_KEY to .env and restart ADA."
+            if update_callback:
+                await update_callback(None, message)
+            return {"success": False, "error": message}
+
         print(f"[START] WebAgent started. Goal: {prompt}")
         final_response = "Agent finished without a final summary."
 

@@ -1,0 +1,3 @@
+# Test tooling (install alongside requirements.txt when developing ADA)
+pytest
+pytest-asyncio

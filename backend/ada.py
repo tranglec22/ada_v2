@@ -34,7 +34,14 @@ MODEL = "models/gemini-2.5-flash-native-audio-preview-12-2025"
 DEFAULT_MODE = "camera"
 
 load_dotenv()
-client = genai.Client(http_options={"api_version": "v1beta"}, api_key=os.getenv("GEMINI_API_KEY"))
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# Allow the desktop shell to start before setup is complete. The audio loop
+# reports a clear configuration error if the user tries to connect without a key.
+client = (
+    genai.Client(http_options={"api_version": "v1beta"}, api_key=GEMINI_API_KEY)
+    if GEMINI_API_KEY
+    else None
+)
 
 # Function definitions
 generate_cad = {
@@ -1171,6 +1178,13 @@ class AudioLoop:
          pass
 
     async def run(self, start_message=None):
+        if client is None:
+            message = "Gemini is not configured. Add GEMINI_API_KEY to the .env file and restart ADA."
+            print(f"[ADA] {message}")
+            if self.on_status:
+                self.on_status(message)
+            return
+
         retry_delay = 1
         is_reconnect = False
         
