@@ -1,0 +1,34 @@
+{
+  "backup_type": "chatgpt-sites-registry",
+  "source_export_available": false,
+  "sites": [
+    {
+      "name": "UTC.OS",
+      "slug": "utc-os-app",
+      "url": "https://utc-os-app.tranglec.chatgpt.site",
+      "platform": "ChatGPT Sites",
+      "canonical": true
+    },
+    {
+      "name": "UP2CODE Painting & Contracting",
+      "slug": "up2code-me",
+      "url": "https://up2code-me.tranglec.chatgpt.site",
+      "platform": "ChatGPT Sites",
+      "canonical": true
+    },
+    {
+      "name": "UP2CODE Lead Engine",
+      "slug": "up2code-lead-engine",
+      "url": "https://up2code-lead-engine.tranglec.chatgpt.site",
+      "platform": "ChatGPT Sites",
+      "canonical": true
+    },
+    {
+      "name": "Lil Wiz-Nap Secret Vault",
+      "slug": "lil-wiznap-secret",
+      "url": "https://lil-wiznap-secret.tranglec.chatgpt.site",
+      "platform": "ChatGPT Sites",
+      "canonical": true
+    }
+  ]
+}
